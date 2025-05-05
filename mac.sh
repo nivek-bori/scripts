@@ -11,7 +11,8 @@ printf "\n"
 
 # Chechking user input is valid
 if [[ "$port" =~ ^en[0-2]$ ]]; then
-  echo "Valid interface: [$port]\n\n"
+  echo "Valid interface: [$port]"
+  printf "\n\n"
 else
   printf "Invalid input. Please enter valid en{digit} (e.g., \"en0\" or \"en1\")\n"
   exit 1
@@ -23,7 +24,8 @@ mac=$(printf '02:%02x:%02x:%02x:%02x:%02x\n' \
   $((RANDOM%256)) $((RANDOM%256)))
 
 # Print the generated MAC
-echo "Generated MAC: [$mac]\n\n"
+echo "Generated MAC: [$mac]"
+printf "\n\n"
 
 printf "Please enter your password whenever prompted\n\n"
 
