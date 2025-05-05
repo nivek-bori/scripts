@@ -2,16 +2,18 @@
 
 # Loggin wifi port for user
 networksetup -listallhardwareports
+printf "\n"
 
 # Getting port location
-printf "\nEnter the en{digit} of your wifi (e.g., \"en0\" or \"en1\": "
+printf "Enter the en{digit} of your wifi (e.g., \"en0\" or \"en1\": "
 read port
+printf "\n"
 
 # Chechking user input is valid
 if [[ "$port" =~ ^en[0-2]$ ]]; then
-  echo "Valid interface: [$port]"
+  echo "Valid interface: [$port]\n"
 else
-  printf "Invalid input. Please enter en{digit} (e.g., \"en0\" or \"en1\"): "
+  printf "Invalid input. Please enter valid en{digit} (e.g., \"en0\" or \"en1\")\n"
   exit 1
 fi
 
@@ -22,9 +24,9 @@ mac=$(printf '02:%02x:%02x:%02x:%02x:%02x\n' \
   $((RANDOM%256)) $((RANDOM%256)))
 
 # Print the generated MAC
-echo "Generated MAC: [$mac]"
+echo "Generated MAC: [$mac]\n"
 
-printf "\nPlease enter your password whenever prompted"
+printf "Please enter your password whenever prompted\n\n"
 
 # Disabling the address
 sudo networksetup -setairportpower "$port" off
