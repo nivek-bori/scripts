@@ -12,7 +12,7 @@ printf "\n"
 # Chechking user input is valid
 if [[ "$port" =~ ^en[0-2]$ ]]; then
   echo "Valid interface: [$port]"
-  printf "\n\n"
+  printf "\n \n"
 else
   printf "Invalid input. Please enter valid en{digit} (e.g., \"en0\" or \"en1\")\n"
   exit 1
@@ -25,7 +25,7 @@ mac=$(printf '02:%02x:%02x:%02x:%02x:%02x\n' \
 
 # Print the generated MAC
 echo "Generated MAC: [$mac]"
-printf "\n\n"
+printf "\n \n"
 
 printf "Please enter your password whenever prompted\n\n"
 
@@ -33,7 +33,7 @@ printf "Please enter your password whenever prompted\n\n"
 sudo networksetup -setairportpower "$port" off
 sudo ifconfig "$port" down
 ifconfig "$port"
-printf "\n\n"
+printf "\n \n"
 
 # Changing mac address
 sudo ifconfig "$port" ether "$mac"
@@ -42,6 +42,6 @@ sudo ifconfig "$port" ether "$mac"
 sudo networksetup -setairportpower "$port" on
 sudo ifconfig "$port" up
 ifconfig "$port"
-printf "\n\n"
+printf "\n \n"
 
 echo "Successfully changed mac address to: [$mac]"
