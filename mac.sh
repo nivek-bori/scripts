@@ -4,14 +4,14 @@
 networksetup -listallhardwareports
 
 # Getting port location
-echo "\nEnter the en{digit} of your wifi (e.g., \"en0\" or \"en1\": "
+printf "\nEnter the en{digit} of your wifi (e.g., \"en0\" or \"en1\": "
 read port
 
 # Chechking user input is valid
 if [[ "$port" =~ ^en[0-2]$ ]]; then
-  echo "Valid interface: $port"
+  echo "Valid interface: [$port]"
 else
-  echo "Invalid input. Please enter en{digit} (e.g., \"en0\" or \"en1\": ."
+  printf "Invalid input. Please enter en{digit} (e.g., \"en0\" or \"en1\"): "
   exit 1
 fi
 
@@ -22,14 +22,14 @@ mac=$(printf '02:%02x:%02x:%02x:%02x:%02x\n' \
   $((RANDOM%256)) $((RANDOM%256)))
 
 # Print the generated MAC
-echo "Generated MAC: $mac"
+echo "Generated MAC: [$mac]"
 
-echo "\nPlease enter your password whenever prompted"
+printf "\nPlease enter your password whenever prompted"
 
 # Disabling the address
 sudo networksetup -setairportpower "$port" off
 sudo ifconfig "$port" down
-ifconfig $"port"
+ifconfig "$port"
 
 # Changing mac address
 sudo ifconfig "$port" ether "$mac"
@@ -39,4 +39,4 @@ sudo networksetup -setairportpower "$port" on
 sudo ifconfig "$port" up
 ifconfig "$port"
 
-echo "\nSuccessfully changed mac address to: $mac"
+echo "\nSuccessfully changed mac address to: [$mac]"
