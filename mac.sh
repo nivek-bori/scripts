@@ -11,12 +11,11 @@ printf "\n"
 
 # Chechking user input is valid
 if [[ "$port" =~ ^en[0-2]$ ]]; then
-  echo "Valid interface: [$port]\n"
+  echo "Valid interface: [$port]\n\n"
 else
   printf "Invalid input. Please enter valid en{digit} (e.g., \"en0\" or \"en1\")\n"
   exit 1
 fi
-
 
 # Generate a random MAC address (starts with 02 for local use)
 mac=$(printf '02:%02x:%02x:%02x:%02x:%02x\n' \
@@ -24,7 +23,7 @@ mac=$(printf '02:%02x:%02x:%02x:%02x:%02x\n' \
   $((RANDOM%256)) $((RANDOM%256)))
 
 # Print the generated MAC
-echo "Generated MAC: [$mac]\n"
+echo "Generated MAC: [$mac]\n\n"
 
 printf "Please enter your password whenever prompted\n\n"
 
@@ -32,6 +31,7 @@ printf "Please enter your password whenever prompted\n\n"
 sudo networksetup -setairportpower "$port" off
 sudo ifconfig "$port" down
 ifconfig "$port"
+printf "\n\n"
 
 # Changing mac address
 sudo ifconfig "$port" ether "$mac"
@@ -40,5 +40,6 @@ sudo ifconfig "$port" ether "$mac"
 sudo networksetup -setairportpower "$port" on
 sudo ifconfig "$port" up
 ifconfig "$port"
+printf "\n\n"
 
-echo "\nSuccessfully changed mac address to: [$mac]"
+echo "Successfully changed mac address to: [$mac]"
