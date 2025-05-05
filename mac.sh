@@ -4,7 +4,7 @@
 networksetup -listallhardwareports
 
 # Getting port location
-echo 'Enter the en{digit} of your wifi (e.g., \"en0\" or \"en1\": '
+echo '\nEnter the en{digit} of your wifi (e.g., \"en0\" or \"en1\": '
 read port
 
 # Chechking user input is valid
@@ -24,10 +24,19 @@ mac=$(printf '02:%02x:%02x:%02x:%02x:%02x\n' \
 # Print the generated MAC
 echo "Generated MAC: $mac"
 
-# Bring interface down, assign MAC, then bring up (replace 'en0' as needed)
-networksetup -setairportpower "$port" off
-sudo ifconfig "$port" down
-sudo ifconfig "$port" ether "$mac"
-sudo ifconfig "$port" up
+echo "\nPlease enter your password whenever prompted"
 
-echo "Successfully changed mac address to: $mac"
+# Disabling the address
+sudo networksetup -setairportpower "$port" off
+sudo ifconfig "$port" down
+ifconfig $"port"
+
+# Changing mac address
+sudo ifconfig "$port" ether "$mac"
+
+# Enabling the address
+sudo networksetup -setairportpower "$port" on
+sudo ifconfig "$port" up
+ifconfig "$port"
+
+echo "\nSuccessfully changed mac address to: $mac"
