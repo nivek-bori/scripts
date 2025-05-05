@@ -4,14 +4,14 @@
 networksetup -listallhardwareports
 
 # Getting port location
-echo '\nEnter the en{digit} of your wifi (e.g., \"en0\" or \"en1\": '
+echo "\nEnter the en{digit} of your wifi (e.g., \"en0\" or \"en1\": "
 read port
 
 # Chechking user input is valid
 if [[ "$port" =~ ^en[0-2]$ ]]; then
   echo "Valid interface: $port"
 else
-  echo 'Invalid input. Please enter en{digit} (e.g., \"en0\" or \"en1\": .'
+  echo "Invalid input. Please enter en{digit} (e.g., \"en0\" or \"en1\": ."
   exit 1
 fi
 
