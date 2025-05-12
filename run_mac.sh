@@ -1,14 +1,22 @@
 #!/bin/bash
 
-LOC="tmp/temp_mac_executable"
+export PS4='+ $(date "+%H:%M:%S") [${BASH_SOURCE##*/}:${LINENO}] '
 
-curl -sL "https://raw.githubusercontent.com/nivek-bori/Spoffing/refs/heads/main/mac.sh" -o "$LOC"
+LOC="tmp/temp_mac_executable.sh"
 
-# Give permissions
-chmod +x "$LOC"
+set -x
 
-# Run Executable
-"$LOC"
+touch "$LOC"
 
-# Remove executable
-rm "$LOC"
+# curl -sL "https://raw.githubusercontent.com/nivek-bori/Spoffing/refs/heads/main/mac.sh" -o "$LOC"
+
+# # Give permissions
+# chmod +x "$LOC"
+
+# # Run Executable
+# "$LOC"
+
+# # Remove executable
+# rm "$LOC"
+
+# set +x
