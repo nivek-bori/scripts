@@ -4,10 +4,17 @@ export PS4='+ $(date "+%H:%M:%S") [${BASH_SOURCE##*/}:${LINENO}] '
 printf "\n"
 
 # Constants
-TMP_LOC="/tmp/temp_mac_executable.sh"
-DWNLD_LOC="https://raw.githubusercontent.com/nivek-bori/Commands/refs/heads/main/mac.sh?token=GHSAT0AAAAAAC72TNX5Q74IC2UNECSK27YU2BCPPIA"
+SPOT_LOC="/Applications/Spotify.app"
+TMP_LOC="/tmp/temp_spotify_executable.sh"
+DWNLD_LOC="https://raw.githubusercontent.com/SpotX-Official/SpotX-Bash/main/spotx.sh"
 
 # Executed code
+printf "DELETING OLD SPOTIFY\n"
+set -x
+sudo rm -r "$SPOT_LOC"
+set +x
+printf "\n"
+
 printf "CREATING THE TEMPORARY EXECUTION FILE\n"
 set -x
 touch "$TMP_LOC"
@@ -16,16 +23,17 @@ printf "\n"
 
 printf "DOWNLOADING CONTENT\n"
 set -x
-curl -sL "$DWNLD_LOC" -o "$TMP_LOC" # Downloading content
+curl -ssL "$DWNLD_LOC" -o "$TMP_LOC" # Downloading content
 chmod +x "$TMP_LOC" # Giving permissions
 set +x
 printf "\n"
 
+# DEBUGGING
 # cat "$TMP_LOC"
 
 printf "RUNNING CONTENT\n"
 set -x
-sudo bash "$TMP_LOC"
+printf "y\nn\ny\ny\ny\nn\n" | bash "$TMP_LOC"
 set +x
 printf "\n"
 

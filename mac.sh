@@ -3,7 +3,7 @@
 # Enhanced logging
 export PS4='+ $(date "+%H:%M:%S") [${BASH_SOURCE##*/}:${LINENO}] '
 
-printf "Note: There is a ~2 day cooldown on changing the MAC address of your device"
+printf "----- Note: There is a ~2 day cooldown on changing the MAC address of your device (I think idk)-----"
 sleep 5
 printf "\n"
 
@@ -33,11 +33,12 @@ mac=$(printf '02:%02x:%02x:%02x:%02x:%02x\n' \
   $((RANDOM%256)) $((RANDOM%256)) $((RANDOM%256)) \
   $((RANDOM%256)) $((RANDOM%256)))
 set +x # ---logging
+
 # Print the generated MAC
 echo "Generated MAC: [$mac]"
 printf "\n \n"
 
-printf "Please enter your password whenever prompted\n\n"
+printf "----- Note: Please enter your password whenever prompted -----\n\n"
 
 # Disabling the address
 printf "DISABLING THE ADDRESS\n"
