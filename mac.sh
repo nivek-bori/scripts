@@ -3,7 +3,7 @@
 # Enhanced logging
 export PS4='+ $(date "+%H:%M:%S") [${BASH_SOURCE##*/}:${LINENO}] '
 
-printf "----- Note: There is a ~2 day cooldown on changing the MAC address of your device (I think idk)-----"
+printf "----- Note: There is a ~2 day cooldown on changing the MAC address of your device (I think)-----"
 sleep 5
 printf "\n"
 
@@ -54,7 +54,7 @@ printf "\n \n"
 # Changing mac address
 printf "CHANGING THE ADDRESS TO $mac\n"
 set -x # ---logging
-
+sudo ifconfig en0 ether "$mac"
 set +x # ---logging
 sleep 5
 printf "\n \n"
