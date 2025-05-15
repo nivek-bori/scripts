@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Terminal command: bash <(curl -sSL https://raw.githubusercontent.com/nivek-bori/Commands/refs/heads/main/run_unconfig_spotify.sh)
+
 export PS4='+ $(date "+%H:%M:%S") [${BASH_SOURCE##*/}:${LINENO}] '
 printf "\n"
 
