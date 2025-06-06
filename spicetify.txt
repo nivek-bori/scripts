@@ -1,0 +1,13 @@
+spicetify extensions are stored in /.config/spicetify/Extensions
+
+to install spicetify extensions run
+	spicetify config extensions <file_name>
+	spicetify apply
+
+to uninstall extensions run
+	spicetify config extensions <file_name>-
+	spicetify apply
+
+to combine with spotX make sure to uninstall all extensions and run
+	spicetify resture // returns spotify to normal
+then you can add back in the spicetify extensions
