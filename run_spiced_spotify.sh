@@ -41,8 +41,10 @@ printf "\n"
 
 printf "APPLYING SPICETIFY\n"
 set -x
+bash spicetify config current_theme Text
+bash spiceitfy config color_scheme Catppuccin
 bash spicetify apply
-set -x
+set +x
 printf "\n"
 
 rm "$TMP_LOC"
