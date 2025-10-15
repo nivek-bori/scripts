@@ -1,6 +1,4 @@
-#!/bin/bash
-
-# Terminal command: bash <(curl -sSL https://raw.githubusercontent.com/nivek-bori/Commands/refs/heads/main/run_spotify.sh)
+#!/bin/basho
 
 export PS4='+ $(date "+%H:%M:%S") [${BASH_SOURCE##*/}:${LINENO}] '
 printf "\n"

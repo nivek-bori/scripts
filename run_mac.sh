@@ -5,7 +5,7 @@ printf "\n"
 
 # Constants
 TMP_LOC="/tmp/temp_mac_executable.sh"
-DWNLD_LOC="https://raw.githubusercontent.com/nivek-bori/Commands/refs/heads/main/mac.sh?token=GHSAT0AAAAAAC72TNX5Q74IC2UNECSK27YU2BCPPIA"
+DWNLD_LOC="https://raw.githubusercontent.com/nivek-bori/scripts/refs/heads/main/mac.sh?token=GHSAT0AAAAAAC72TNX5Q74IC2UNECSK27YU2BCPPIA"
 
 # Executed code
 printf "CREATING THE TEMPORARY EXECUTION FILE\n"
