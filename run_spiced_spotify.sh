@@ -50,11 +50,9 @@ printf "\n"
 
 printf "DOWNLOADING SPICETIFY EXTENSIONS"
 set -x
-cd SPICETIFY_LOC
-cd Extensions
-curl -o shuffle_plus.js https://raw.githubusercontent.com/spicetify/cli/refs/heads/main/Extensions/shuffle%2B.js
-curl -o scannables.js https://raw.githubusercontent.com/ohitstom/spicetify-extensions/refs/heads/main/scannables/scannables.js
-curl -o beautiful_lyrics.mjs https://raw.githubusercontent.com/surfbryce/beautiful-lyrics/refs/heads/main/Builds/Release/beautiful-lyrics.mjs
+curl -o "$SPICETIFY_LOC/shuffle_plus.js" https://raw.githubusercontent.com/spicetify/cli/refs/heads/main/Extensions/shuffle%2B.js
+curl -o "$SPICETIFY_LOC/scannable.js" https://raw.githubusercontent.com/ohitstom/spicetify-extensions/refs/heads/main/scannables/scannables.js
+curl -o "$SPICETIFY_LOC/beautiful_lyrics.mjs" https://raw.githubusercontent.com/surfbryce/beautiful-lyrics/refs/heads/main/Builds/Release/beautiful-lyrics.mjs
 
 printf "APPLYING SPICETIFY\n"
 set -x
@@ -63,10 +61,10 @@ spicetify backup apply
 spicetify config current_theme Text
 spicetify config color_scheme SPOTIFY
 spicetify config extensions shuffle_plus.js
-spicetify config extensions scannables.js
+spicetify config extensions scannable.js
 spicetify config extensions beautiful_lyrics.mjs
 spicetify apply
 set +x
 printf "\n"
 
-rm "$TMP_LOC"
+rm "$EXEC_LOC"
