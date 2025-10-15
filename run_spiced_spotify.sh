@@ -12,13 +12,13 @@ DWNLD_LOC="https://raw.githubusercontent.com/SpotX-Official/SpotX-Bash/main/spot
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
     # macOS
-    SPICETIFY_LOC="$HOME/.spicetify"
+    SPICETIFY_LOC="$HOME/.config/spicetify"
 elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
     # Windows (Git Bash or Cygwin)
-    SPICETIFY_LOC="$USERPROFILE/.spicetify"
+    SPICETIFY_LOC="$APPDATA/spicetify"
 else
     # Linux
-    SPICETIFY_LOC="$HOME/.spicetify"
+    SPICETIFY_LOC="$HOME/.config/spicetify"
 fi
 
 # Executed code
@@ -63,10 +63,10 @@ set -x
 chmod +x /opt/homebrew/bin/spicetify
 spicetify backup apply
 spicetify config current_theme Text
-spicetify config color_scheme Catppuccin
+spicetify config color_scheme SPOTIFY
 spicetify config extensions shuffle_plus.js
 spicetify config extensions scannables.js
-spicetify config extensions beautiful lyrics.mjs
+spicetify config extensions beautiful_lyrics.mjs
 spicetify apply
 set +x
 printf "\n"
