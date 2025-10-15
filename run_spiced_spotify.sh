@@ -19,6 +19,8 @@ else
     SPICETIFY_LOC="$HOME/.config/spicetify"
 fi
 
+echo "DEBBUGGING: $SPICETIFY_LOC"
+
 # Executed code
 printf "DELETING OLD SPOTIFY\n"
 set -x
@@ -50,9 +52,9 @@ printf "\n"
 
 printf "DOWNLOADING SPICETIFY EXTENSIONS"
 set -x
-curl -o "$SPICETIFY_LOC/shuffle_plus.js" https://raw.githubusercontent.com/spicetify/cli/refs/heads/main/Extensions/shuffle%2B.js
-curl -o "$SPICETIFY_LOC/scannable.js" https://raw.githubusercontent.com/ohitstom/spicetify-extensions/refs/heads/main/scannables/scannables.js
-curl -o "$SPICETIFY_LOC/beautiful_lyrics.mjs" https://raw.githubusercontent.com/surfbryce/beautiful-lyrics/refs/heads/main/Builds/Release/beautiful-lyrics.mjs
+curl -o "$SPICETIFY_LOC/Extensions/shuffle_plus.js" https://raw.githubusercontent.com/spicetify/cli/refs/heads/main/Extensions/shuffle%2B.js
+curl -o "$SPICETIFY_LOC/Extensions/scannable.js" https://raw.githubusercontent.com/ohitstom/spicetify-extensions/refs/heads/main/scannables/scannables.js
+curl -o "$SPICETIFY_LOC/Extensions/beautiful_lyrics.mjs" https://raw.githubusercontent.com/surfbryce/beautiful-lyrics/refs/heads/main/Builds/Release/beautiful-lyrics.mjs
 
 printf "APPLYING SPICETIFY\n"
 set -x
