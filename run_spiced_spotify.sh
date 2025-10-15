@@ -42,6 +42,7 @@ printf "\n"
 printf "APPLYING SPICETIFY\n"
 set -x
 chmod +x /opt/homebrew/bin/spicetify
+spicetify backup apply
 spicetify config current_theme Text
 spicetify config color_scheme Catppuccin
 spicetify apply
