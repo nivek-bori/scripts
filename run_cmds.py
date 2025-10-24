@@ -1,6 +1,6 @@
 commands = [
 'bash <(curl -sSL https://raw.githubusercontent.com/nivek-bori/scripts/refs/heads/main/run_spotify.sh)',
-'bash <(curl -sSL https://raw.githubusercontent.com/nivek-bori/scripts/refs/heads/main/run_spiced_spotify.sh)',
+'bash <(curl -sSL https://raw.githubusercontent.com/nivek-bori/scripts/refs/heads/main/run_spiced_spotify.sh) | spicetify backup apply | spicetify apply',
 'bash <(curl -sSL https://raw.githubusercontent.com/nivek-bori/scripts/refs/heads/main/run_unconfig_spotify.sh)',
 'bash <(curl -sSL https://raw.githubusercontent.com/nivek-bori/scripts/refs/heads/main/run_mac.sh)',
 'bash <(curl -sSL https://raw.githubusercontent.com/nivek-bori/scripts/refs/heads/main/mac.sh)'
