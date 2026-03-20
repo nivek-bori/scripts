@@ -6,7 +6,7 @@ printf "\n"
 # Constants
 SPOT_LOC="/Applications/Spotify.app"
 TMP_LOC="/tmp/temp_spotify_executable.sh"
-DWNLD_LOC="https://raw.githubusercontent.com/SpotX-Official/SpotX-Bash/main/spotx.sh"
+DWNLD_LOC="https://raw.githubusercontent.com/SpotX-Official/SpotX-Bash/refs/heads/main/spotx.sh"
 
 # Executed code
 printf "DELETING OLD SPOTIFY\n"
