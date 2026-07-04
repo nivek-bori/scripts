@@ -47,7 +47,7 @@ printf "y\nn\ny\ny\ny\nn\n" | bash "$EXEC_LOC"
 set +x
 printf "\n"
 
-if [[ -d "$SPICETIFY_LOC"]]; then
+if [[ -d "$SPICETIFY_LOC" ]]; then
     printf "DOWNLOADING SPICETIFY EXTENSIONS"
     set -x
     curl -o "$SPICETIFY_LOC/Extensions/shuffle_plus.js" https://raw.githubusercontent.com/spicetify/cli/refs/heads/main/Extensions/shuffle%2B.js
