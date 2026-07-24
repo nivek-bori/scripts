@@ -12,5 +12,11 @@
 # @raycast.author nivek_bori
 # @raycast.authorURL https://raycast.com/nivek_bori
 
-open "/Applications/Ghostty.app"
-echo -n "bash <(curl -sSL https://raw.githubusercontent.com/nivek-bori/scripts/refs/heads/main/run_spiced_spotify.sh) && spicetify backup apply && spicetify apply" | pbcopy
+LOCAL_SCRIPT_PATH="/Users/kevinboriboonsomsin/Github/scripts/run_spiced_spotify.sh"
+
+if [[ -f "$LOCAL_SCRIPT_PATH" ]]; then
+    bash "$LOCAL_SCRIPT_PATH"
+else
+    open "/Applications/Ghostty.app"
+    echo -n "bash <(curl -sSL https://raw.githubusercontent.com/nivek-bori/scripts/refs/heads/main/run_spiced_spotify.sh) && spicetify backup apply && spicetify apply" | pbcopy
+fi
