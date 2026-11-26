@@ -1,0 +1,37 @@
+{
+  "$schema": "https://www.raycast.com/schemas/extension.json",
+  "name": "move-file",
+  "title": "Move File",
+  "description": "Move a file with the Finder selection prefilled as the source.",
+  "icon": "move.png",
+  "author": "nivek_bori",
+  "platforms": ["macOS"],
+  "categories": ["Productivity"],
+  "private": true,
+  "commands": [
+    {
+      "name": "move-file",
+      "title": "Move File",
+      "description": "Move a selected Finder file or enter a source path manually.",
+      "mode": "view"
+    },
+    {
+      "name": "test-finder-selection",
+      "title": "Test Finder Selection",
+      "description": "Show the selected Finder paths and what Move File would put in From.",
+      "mode": "view"
+    }
+  ],
+  "scripts": {
+    "build": "ray build -e dist -o dist",
+    "dev": "ray develop"
+  },
+  "dependencies": {
+    "@raycast/api": "2.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "22.19.17",
+    "@types/react": "19.0.10",
+    "typescript": "5.9.3"
+  }
+}
