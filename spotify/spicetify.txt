@@ -1,0 +1,19 @@
+Find the Spicetify config file with:
+    spicetify -c
+
+The Extensions directory is next to that file. Replace example.js with the
+extension filename.
+
+Enable an extension:
+    spicetify config extensions example.js
+    spicetify apply
+
+Disable an extension:
+    spicetify config extensions example.js-
+    spicetify apply
+
+Restore the Spotify files from Spicetify's backup:
+    spicetify restore
+
+To combine SpotX and Spicetify, start with a clean Spotify install, then run
+SpotX before running spicetify backup apply.

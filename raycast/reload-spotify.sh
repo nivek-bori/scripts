@@ -2,7 +2,7 @@
 
 # Required parameters:
 # @raycast.schemaVersion 1
-# @raycast.title Spotify Refresh
+# @raycast.title Reload Spotify
 # @raycast.mode compact
 
 # Optional parameters:
@@ -12,7 +12,7 @@
 # @raycast.author nivek_bori
 # @raycast.authorURL https://raycast.com/nivek_bori
 
-LOCAL_SCRIPT_PATH="/Users/kevinboriboonsomsin/Github/scripts/run_spiced_spotify.sh"
+LOCAL_SCRIPT_PATH="/Users/kevinboriboonsomsin/Github/scripts/spotify/run_spiced_spotify.sh"
 
 if [[ -f "$LOCAL_SCRIPT_PATH" ]]; then
     bash "$LOCAL_SCRIPT_PATH"
