@@ -29,7 +29,7 @@ fi
 sleep "$TOTAL_SECONDS"
 
 # ----- Audio Configuration -----
-ALARM_FILE="/Users/kevinboriboonsomsin/Documents/[scripts]/system_sounds/quiet_alarm.mp3"
+ALARM_FILE="/Users/kevinboriboonsomsin/Documents/software/system_sounds/quiet_alarm.mp3"
 TEMP_FILE="/tmp/quiet_alarm.mp3"
 VOLUME_MAX="40"  # Max volume
 REPEAT_COUNT=19  # ffmpeg: -stream_loop n plays input n+1 times
