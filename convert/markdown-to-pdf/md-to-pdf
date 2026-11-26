@@ -1,0 +1,167 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly TEMPLATE="$SCRIPT_DIR/academic-notes.typ"
+readonly PAGEBREAK_FILTER="$SCRIPT_DIR/pagebreak.lua"
+readonly STYLE_FILE="$SCRIPT_DIR/style.typ"
+
+usage() {
+    cat <<'EOF'
+Usage: md-to-pdf [OPTIONS] INPUT.md [OUTPUT.pdf]
+
+Convert Markdown academic notes to a print-ready US Letter PDF with Pandoc
+and Typst. The input file is never modified. By default, the PDF is written to
+the user's Downloads directory.
+
+Options:
+  -o, --output FILE  Write to FILE instead of the Downloads default
+      --font-size PT Override the body size (8pt, 9pt, 10pt, or 11pt)
+  -f, --force        Replace an existing output file
+  -q, --quiet        Suppress Pandoc progress and warnings
+  -h, --help         Show this help
+
+On success, the command prints the absolute output path to stdout. Diagnostics
+go to stderr, making the command safe to call and capture from Raycast.
+EOF
+}
+
+die() {
+    printf 'md-to-pdf: %s\n' "$*" >&2
+    exit 1
+}
+
+OUTPUT=""
+FONT_SIZE=""
+FORCE=false
+QUIET=false
+POSITIONAL=()
+
+while (($#)); do
+    case "$1" in
+        -o|--output)
+            (($# >= 2)) || die "$1 requires a PDF path"
+            OUTPUT="$2"
+            shift 2
+            ;;
+        --font-size)
+            (($# >= 2)) || die "$1 requires a size such as 10pt"
+            FONT_SIZE="$2"
+            shift 2
+            ;;
+        -f|--force)
+            FORCE=true
+            shift
+            ;;
+        -q|--quiet)
+            QUIET=true
+            shift
+            ;;
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        --)
+            shift
+            POSITIONAL+=("$@")
+            break
+            ;;
+        -*)
+            die "unknown option: $1"
+            ;;
+        *)
+            POSITIONAL+=("$1")
+            shift
+            ;;
+    esac
+done
+
+(( ${#POSITIONAL[@]} >= 1 )) || die "missing input Markdown file (try --help)"
+(( ${#POSITIONAL[@]} <= 2 )) || die "expected one input and at most one output"
+
+if [[ -n "$FONT_SIZE" && ! "$FONT_SIZE" =~ ^(8|9|10|11)pt$ ]]; then
+    die "font size must be 8pt, 9pt, 10pt, or 11pt"
+fi
+
+INPUT="${POSITIONAL[0]}"
+if [[ -n "$OUTPUT" && ${#POSITIONAL[@]} -eq 2 ]]; then
+    die "specify the output either positionally or with --output, not both"
+fi
+if [[ -z "$OUTPUT" && ${#POSITIONAL[@]} -eq 2 ]]; then
+    OUTPUT="${POSITIONAL[1]}"
+fi
+
+command -v pandoc >/dev/null 2>&1 || die "Pandoc is not installed (brew install pandoc)"
+command -v typst >/dev/null 2>&1 || die "Typst is not installed (brew install typst)"
+[[ -f "$TEMPLATE" ]] || die "template not found: $TEMPLATE"
+[[ -f "$PAGEBREAK_FILTER" ]] || die "page-break filter not found: $PAGEBREAK_FILTER"
+[[ -f "$STYLE_FILE" ]] || die "style file not found: $STYLE_FILE"
+[[ -f "$INPUT" ]] || die "input file not found: $INPUT"
+[[ -r "$INPUT" ]] || die "input file is not readable: $INPUT"
+
+STYLE_DEFINITION="$(<"$STYLE_FILE")"
+
+case "${INPUT##*.}" in
+    md|MD|markdown|MARKDOWN|mdown|MDOWN) ;;
+    *) die "input must have a Markdown extension (.md, .markdown, or .mdown)" ;;
+esac
+
+INPUT_DIR="$(cd "$(dirname "$INPUT")" && pwd)"
+INPUT_PATH="$INPUT_DIR/$(basename "$INPUT")"
+
+if [[ -z "$OUTPUT" ]]; then
+    OUTPUT="$HOME/Downloads/$(basename "${INPUT_PATH%.*}").pdf"
+elif [[ "$OUTPUT" != /* ]]; then
+    OUTPUT="$(pwd)/$OUTPUT"
+fi
+
+case "${OUTPUT##*.}" in
+    pdf|PDF) ;;
+    *) die "output must have a .pdf extension: $OUTPUT" ;;
+esac
+
+OUTPUT_DIR="$(dirname "$OUTPUT")"
+[[ -d "$OUTPUT_DIR" ]] || die "output directory does not exist: $OUTPUT_DIR"
+OUTPUT_DIR="$(cd "$OUTPUT_DIR" && pwd)"
+OUTPUT_PATH="$OUTPUT_DIR/$(basename "$OUTPUT")"
+
+if [[ -e "$OUTPUT_PATH" && "$FORCE" != true ]]; then
+    die "output already exists (use --force to replace it): $OUTPUT_PATH"
+fi
+
+WORK_DIR="$(mktemp -d "${TMPDIR:-/tmp}/md-to-pdf.XXXXXX")"
+TEMP_PDF="$WORK_DIR/output.pdf"
+cleanup() {
+    rm -rf -- "$WORK_DIR"
+}
+trap cleanup EXIT HUP INT TERM
+
+PANDOC_ARGS=(
+    "$INPUT_PATH"
+    --from=markdown
+    --standalone
+    --pdf-engine=typst
+    --template="$TEMPLATE"
+    --variable=style-definition="$STYLE_DEFINITION"
+    --lua-filter="$PAGEBREAK_FILTER"
+    --resource-path="$INPUT_DIR"
+    --wrap=none
+    --fail-if-warnings
+    --output="$TEMP_PDF"
+)
+
+if [[ -n "$FONT_SIZE" ]]; then
+    PANDOC_ARGS+=(--variable=fontsize="$FONT_SIZE")
+fi
+
+if [[ "$QUIET" == true ]]; then
+    PANDOC_ARGS+=(--quiet)
+fi
+
+pandoc "${PANDOC_ARGS[@]}"
+[[ -s "$TEMP_PDF" ]] || die "Pandoc completed without producing a PDF"
+
+mv -f -- "$TEMP_PDF" "$OUTPUT_PATH"
+printf '%s\n' "$OUTPUT_PATH"
+
