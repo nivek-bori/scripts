@@ -1,0 +1,1 @@
+/Users/kevinboriboonsomsin/Github/scripts/whisper-tools/raycast/burn-captions.sh

@@ -1,0 +1,112 @@
+#!/bin/zsh
+
+source "${0:A:h:h}/config.sh" || exit 1
+
+usage() {
+  print -r -- 'Usage: subs <video-or-audio> [more files...] [--model small|medium|large] [--vtt] [--burn] [--font-size N] [--lang en]'
+}
+
+fail() { print -ru2 -- "subs: $*"; return 1; }
+usage_error() { fail "$@"; usage >&2; exit 2; }
+
+files=()
+model=$subtitles_model
+lang=${language:l}
+extension=srt
+format=--output-srt
+burn=0
+font_size=20
+while (( $# )); do
+  case $1 in
+    --model)
+      case ${2:-} in
+        small) model=small.en ;;
+        medium) model=medium ;;
+        large) model=large-v3 ;;
+        *) usage_error 'Choose --model small, medium or large.' ;;
+      esac
+      shift ;;
+    --lang)
+      [[ -n ${2:-} && $2 != -* ]] || usage_error '--lang needs a language code.'
+      lang=${2:l}
+      shift ;;
+    --vtt) extension=vtt; format=--output-vtt ;;
+    --burn) burn=1 ;;
+    --font-size)
+      [[ ${2:-} =~ '^[1-9][0-9]*$' ]] || usage_error '--font-size needs a positive whole number.'
+      font_size=$2
+      shift ;;
+    -h|--help) usage; exit 0 ;;
+    --) shift; files+=("$@"); break ;;
+    -*) usage_error "Unknown option '$1'. Use -- before filenames beginning with a dash." ;;
+    *) files+=("$1") ;;
+  esac
+  shift
+done
+
+(( ${#files} )) || usage_error 'Supply at least one file.'
+if [[ $lang != en && $model == *.en ]]; then
+  model=${model%.en}
+fi
+weights=$(model_path "$model")
+[[ -s $weights ]] || { fail "Missing $weights. Run ./install.sh $model from the repo while online."; exit 1; }
+[[ -x $whisper && -x $ffmpeg ]] || { fail 'Missing whisper-cli or FFmpeg. Run ./install.sh.'; exit 1; }
+
+render_ffmpeg=$ffmpeg
+if (( burn )) && ! has_subtitles_filter "$render_ffmpeg"; then
+  render_ffmpeg=$ffmpeg_full
+  has_subtitles_filter "$render_ffmpeg" || { fail 'Missing the FFmpeg subtitles filter. Run ./install.sh to install ffmpeg-full.'; exit 1; }
+fi
+
+# Each file gets its own workspace. Keep filter paths relative to avoid escaping
+# filenames through FFmpeg's filtergraph and subtitle-filter parsers.
+make_subtitles() (
+  local input=$1 work stem caption video style
+  [[ $input == /* ]] || input="$PWD/$input"
+  [[ -f $input && -r $input ]] || { fail "Cannot read $input"; return 1; }
+  stem="${input:h}/${${input:t}:r}"
+  caption="$stem.$extension"
+  video="$stem.captioned.mp4"
+  [[ $caption != "$input" && ! -d $caption ]] || { fail "Cannot write $caption"; return 1; }
+  work=$(mktemp -d "${input:h}/.whisper-tools.XXXXXXXX") || return 1
+  trap 'rm -rf -- "$work"' EXIT
+  trap 'exit 130' INT
+  trap 'exit 143' TERM
+  cd -- "$work" || return 1
+
+  print -r -- "Extracting audio from $input"
+  "$ffmpeg" -hide_banner -loglevel error -nostdin -protocol_whitelist file -i "$input" \
+    -map 0:a:0 -af aresample=async=1:first_pts=0 -ac 1 -ar 16000 -c:a pcm_s16le audio.wav || return 1
+  print -r -- "Transcribing with $model ($lang)…"
+  "$whisper" -m "$weights" -f audio.wav -l "$lang" --no-prints \
+    --max-len 42 --split-on-word "$format" --output-file captions || return 1
+  /usr/bin/grep -Eq -- '^[0-9]+:[0-9]{2}:[0-9]{2}[,.][0-9]{3} --> ' "captions.$extension" 2>/dev/null ||
+    { fail "No caption cues produced for $input"; return 1; }
+
+  # Keep the sidecar even if the optional render fails.
+  cp -- "captions.$extension" sidecar || return 1
+  mv -fh -- sidecar "$caption" || return 1
+  print -r -- "Wrote $caption"
+  if (( burn )); then
+    [[ ! -d $video ]] || { fail "Cannot write $video"; return 1; }
+    print -r -- "Burning captions into $video"
+    style="FontName=Arial,FontSize=$font_size,PrimaryColour=&H00FFFFFF,OutlineColour=&H60000000,BorderStyle=3,Outline=3,Shadow=0,Alignment=2,MarginV=24"
+    "$render_ffmpeg" -hide_banner -loglevel error -nostdin -protocol_whitelist file -i "$input" \
+      -map 0:V:0 -map 0:a:0 -vf "subtitles=captions.$extension:force_style='$style'" \
+      -c:v libx264 -preset fast -crf 20 -pix_fmt yuv420p -c:a copy -movflags +faststart captioned.mp4 || return 1
+    mv -fh -- captioned.mp4 "$video" || return 1
+    print -r -- "Wrote $video"
+  fi
+)
+
+result=0
+for file in "${files[@]}"; do
+  make_subtitles "$file"
+  case $? in
+    0) ;;
+    130) exit 130 ;;
+    143) exit 143 ;;
+    *) fail "Failed to process $file"; result=1 ;;
+  esac
+done
+exit "$result"
