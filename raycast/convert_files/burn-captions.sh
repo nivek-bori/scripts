@@ -1,0 +1,1 @@
+../../whisper-tools/raycast/burn-captions.sh
